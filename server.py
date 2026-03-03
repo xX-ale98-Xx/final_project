@@ -1,3 +1,5 @@
+""" Backend for emotion detector app, it uses the Watson NLP API """
+
 from flask import Flask, render_template, request
 from EmotionDetection.emotion_detection import emotion_detector
 
