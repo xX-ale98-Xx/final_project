@@ -8,11 +8,19 @@ def emotion_detector(text_to_analyze):
     
     response = requests.post(url, json=myobj, headers=header)
     
-    # Conversione della risposta in dizionario
-    formatted_response = json.loads(response.text)
+    # Task 7: Check for status_code 400 (Bad Request/Blank Entry)
+    if response.status_code == 400:
+        return {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+        }
     
-    # Estrazione delle emozioni (si trovano dentro 'emotionPredictions')
-    # Nota: Watson restituisce una lista, prendiamo il primo elemento [0]
+    # Process successful responses
+    formatted_response = json.loads(response.text)
     emotions = formatted_response['emotionPredictions'][0]['emotion']
     
     anger_score = emotions['anger']
@@ -21,7 +29,6 @@ def emotion_detector(text_to_analyze):
     joy_score = emotions['joy']
     sadness_score = emotions['sadness']
     
-    # Logica per trovare l'emozione dominante
     emotion_list = {
         'anger': anger_score,
         'disgust': disgust_score,
@@ -31,8 +38,7 @@ def emotion_detector(text_to_analyze):
     }
     dominant_emotion = max(emotion_list, key=emotion_list.get)
     
-    # Formattazione dell'output finale richiesto
-    result = {
+    return {
         'anger': anger_score,
         'disgust': disgust_score,
         'fear': fear_score,
@@ -40,5 +46,3 @@ def emotion_detector(text_to_analyze):
         'sadness': sadness_score,
         'dominant_emotion': dominant_emotion
     }
-    
-    return result
